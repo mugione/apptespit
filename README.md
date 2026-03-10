@@ -10,6 +10,8 @@ Amacımız, araç sahiplerinin plakalarının yasal standartlara uygun olup olma
 
 ## 🚀 Özellikler
 
+- **Görsel Doğrulama:** Yüklenen görselin gerçekten bir araç plakası olup olmadığını otomatik olarak tespit eder; plaka dışı görsellerde kullanıcıyı uyarır.
+- **Kamera Desteği:** Mobil cihazlarda doğrudan kamera üzerinden plaka fotoğrafı çekme ve analiz etme özelliği.
 - **Yapay Zeka Analizi:** Google Gemini Multimodal motoru kullanılarak plaka üzerindeki font, karakter aralığı ve çerçeve yapısı incelenir.
 - **APP Tespiti:** Standart dışı (Avrupa Pres Plaka - APP) plakaları yüksek doğrulukla tespit eder.
 - **Teknik Detaylar:** Font kalınlığı, karakterlerin birbirine olan mesafesi ve plaka çerçevesi gibi teknik parametreler hakkında detaylı bilgi sunar.
@@ -25,9 +27,21 @@ Amacımız, araç sahiplerinin plakalarının yasal standartlara uygun olup olma
 - **İkonlar:** Lucide React
 - **AI Engine:** Google Gemini API (@google/genai)
 
+## 🔑 Gemini API Kurulumu
+
+Bu uygulamayı kendi ortamınızda çalıştırmak için bir Google Gemini API anahtarına ihtiyacınız vardır:
+
+1. [Google AI Studio](https://aistudio.google.com/) adresine gidin ve ücretsiz bir API anahtarı oluşturun.
+2. Projenin kök dizininde `.env` dosyası oluşturun (veya mevcut olanı kullanın).
+3. Aşağıdaki satırı ekleyin:
+   ```env
+   GEMINI_API_KEY=SİZİN_API_ANAHTARINIZ
+   ```
+4. Uygulama bu anahtarı kullanarak analizleri gerçekleştirecektir.
+
 ## 📖 Kullanım
 
-1. Uygulama ana sayfasındaki görsel yükleme alanına plaka fotoğrafını yükleyin veya sürükleyin.
+1. Uygulama ana sayfasındaki görsel yükleme alanına plaka fotoğrafını yükleyin, sürükleyin veya **kamera butonuna** tıklayarak anlık fotoğraf çekin.
 2. Yapay zeka görseli saniyeler içinde analiz eder.
 3. Sonuç ekranında plakanın **Standart** mı yoksa **APP** mi olduğu, güven oranıyla birlikte gösterilir.
 4. Teknik özet kısmından analizin nedenlerini inceleyebilirsiniz.

@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Upload, Sparkles, Image as ImageIcon, X, Loader2, ShieldCheck, ShieldAlert, Info, Gauge, HelpCircle, ExternalLink } from 'lucide-react';
+import { Upload, Sparkles, Image as ImageIcon, X, Loader2, ShieldCheck, ShieldAlert, Info, Gauge, HelpCircle, ExternalLink, Camera } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
 
 interface AnalysisResult {
+  isLicensePlate: boolean;
   isAppPlate: boolean;
   probability: number;
   reason: string;
@@ -20,6 +21,7 @@ export default function App() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const ai = new GoogleGenAI({ 
     apiKey: (import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '') as string 
@@ -50,7 +52,7 @@ export default function App() {
           {
             parts: [
               { inlineData: { data: base64Data, mimeType: "image/jpeg" } },
-              { text: "Görseldeki araç plakasını Türkiye standartlarına göre analiz et. Plakanın 'APP' (Avrupa Pres Plaka - kalın fontlu, genellikle yasal olmayan) olup olmadığını tespit et. Karakter kalınlığı, font tipi, mavi TR şeridi ve çerçeve yapısını incele. Yanıtı tamamen Türkçe ve JSON formatında ver." }
+              { text: "Görseli analiz et. Önce bu görselin bir araç plakası olup olmadığını tespit et (isLicensePlate). Eğer bir plaka ise, Türkiye standartlarına göre analiz et. Plakanın 'APP' (Avrupa Pres Plaka - kalın fontlu, genellikle yasal olmayan) olup olmadığını tespit et. Karakter kalınlığı, font tipi, mavi TR şeridi ve çerçeve yapısını incele. Eğer görsel bir plaka değilse, isLicensePlate değerini false yap ve diğer alanları buna göre doldur. Yanıtı tamamen Türkçe ve JSON formatında ver." }
             ]
           }
         ],
@@ -59,6 +61,7 @@ export default function App() {
           responseSchema: {
             type: Type.OBJECT,
             properties: {
+              isLicensePlate: { type: Type.BOOLEAN, description: "Görsel bir araç plakası mı?" },
               isAppPlate: { type: Type.BOOLEAN, description: "Plaka APP mi?" },
               probability: { type: Type.NUMBER, description: "APP olma olasılığı yüzdesi (0-100)" },
               reason: { type: Type.STRING, description: "Kısa teknik özet (Türkçe)" },
@@ -72,7 +75,7 @@ export default function App() {
                 required: ["fontThickness", "spacing", "borderStyle"]
               }
             },
-            required: ["isAppPlate", "probability", "reason", "details"]
+            required: ["isLicensePlate", "isAppPlate", "probability", "reason", "details"]
           }
         }
       });
@@ -130,15 +133,23 @@ export default function App() {
               }`}
             >
               {!image ? (
-                <div 
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer p-4 text-center"
-                >
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-slate-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-slate-100">
-                    <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                  <div className="flex gap-4 mb-6">
+                    <div 
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-slate-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 border border-slate-100 cursor-pointer shadow-sm hover:bg-white"
+                    >
+                      <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400" />
+                    </div>
+                    <div 
+                      onClick={() => cameraInputRef.current?.click()}
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-orange-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 border border-orange-100 cursor-pointer shadow-sm hover:bg-white"
+                    >
+                      <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
+                    </div>
                   </div>
-                  <p className="text-lg sm:text-xl font-bold text-slate-600">Görseli Yükleyin</p>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-2">Sürükle bırak veya tıkla</p>
+                  <p className="text-lg sm:text-xl font-bold text-slate-600">Görseli Yükleyin veya Çekin</p>
+                  <p className="text-xs sm:text-sm text-slate-400 mt-2">Dosya seçin veya kamerayı kullanın</p>
                 </div>
               ) : (
                 <>
@@ -150,6 +161,7 @@ export default function App() {
                 </>
               )}
               <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
+              <input type="file" ref={cameraInputRef} onChange={handleImageUpload} accept="image/*" capture="environment" className="hidden" />
             </motion.div>
 
             {image && (
@@ -176,90 +188,110 @@ export default function App() {
                   animate={{ opacity: 1, x: 0 }}
                   className="h-full bg-white border border-slate-200 rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 lg:p-12 flex flex-col shadow-xl"
                 >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-6">
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center ${result.isAppPlate ? 'bg-red-50 text-red-500' : 'bg-emerald-50 text-emerald-500'}`}>
-                        {result.isAppPlate ? <ShieldAlert className="w-6 h-6 sm:w-8 sm:h-8" /> : <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8" />}
+                  {!result.isLicensePlate ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                      <div className="w-20 h-20 rounded-3xl bg-orange-50 flex items-center justify-center mb-6 text-orange-500">
+                        <ShieldAlert className="w-10 h-10" />
                       </div>
-                      <div>
-                        <h3 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900">
-                          {result.isAppPlate ? "APP TESPİTİ" : "STANDART"}
-                        </h3>
-                        <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">Yapay Zeka Analiz Sonucu</p>
-                      </div>
-                    </div>
-                    <div className="text-left sm:text-right w-full sm:w-auto border-t sm:border-t-0 border-slate-100 pt-4 sm:pt-0">
-                      <div className="flex items-center sm:justify-end gap-2 mb-1">
-                        <span className={`text-4xl sm:text-6xl font-black leading-none ${result.isAppPlate ? 'text-red-500' : 'text-emerald-500'}`}>
-                          %{result.isAppPlate ? result.probability : (100 - result.probability)}
-                        </span>
-                        <button 
-                          onClick={() => setShowInfo(!showInfo)}
-                          className="text-slate-300 hover:text-slate-500 transition-colors p-1"
-                        >
-                          <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </button>
-                      </div>
-                      <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-[0.3em] font-black">Güven Oranı</p>
-                    </div>
-                  </div>
-
-                  {/* Bilgi Kutusu */}
-                  <AnimatePresence>
-                    {showInfo && (
-                      <motion.div 
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden mb-8"
-                      >
-                        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-500 leading-relaxed">
-                          <p className="font-bold text-slate-900 mb-2 uppercase tracking-widest">Güven Oranı Nedir?</p>
-                          Bu yüzde, yapay zekanın plakanın mevcut durumuna dair ne kadar emin olduğunu gösterir. 
-                          <br /><br />
-                          Plaka <strong>APP</strong> olarak tespit edilirse, yüzde APP olma olasılığını; <strong>Standart</strong> olarak tespit edilirse, yüzde standart olma olasılığını temsil eder.
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* İlerleme Çubuğu */}
-                  <div className="w-full h-3 sm:h-4 bg-slate-100 rounded-full mb-10 sm:mb-12 overflow-hidden border border-slate-200/50">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${result.isAppPlate ? result.probability : (100 - result.probability)}%` }}
-                      transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                      className={`h-full rounded-full ${result.isAppPlate ? 'bg-gradient-to-r from-red-600 to-red-400' : 'bg-gradient-to-r from-emerald-600 to-emerald-400'}`}
-                    />
-                  </div>
-
-                  <div className="space-y-8 flex-grow">
-                    <div>
-                      <div className="flex items-center gap-2 mb-4 text-slate-400">
-                        <Info className="w-4 h-4" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Teknik Özet</span>
-                      </div>
-                      <p className="text-xl sm:text-2xl font-light text-slate-700 leading-snug italic">
-                        "{result.reason}"
+                      <h3 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">Geçersiz Görsel</h3>
+                      <p className="text-slate-500 max-w-sm leading-relaxed mb-8">
+                        Yüklediğiniz görsel bir araç plakası olarak tanımlanamadı. Lütfen net bir plaka görseli yükleyerek tekrar deneyin.
                       </p>
+                      <button 
+                        onClick={clear}
+                        className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-slate-800 transition-colors"
+                      >
+                        Görseli Değiştir
+                      </button>
                     </div>
+                  ) : (
+                    <>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center ${result.isAppPlate ? 'bg-red-50 text-red-500' : 'bg-emerald-50 text-emerald-500'}`}>
+                            {result.isAppPlate ? <ShieldAlert className="w-6 h-6 sm:w-8 sm:h-8" /> : <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8" />}
+                          </div>
+                          <div>
+                            <h3 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900">
+                              {result.isAppPlate ? "APP TESPİTİ" : "STANDART"}
+                            </h3>
+                            <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">Yapay Zeka Analiz Sonucu</p>
+                          </div>
+                        </div>
+                        <div className="text-left sm:text-right w-full sm:w-auto border-t sm:border-t-0 border-slate-100 pt-4 sm:pt-0">
+                          <div className="flex items-center sm:justify-end gap-2 mb-1">
+                            <span className={`text-4xl sm:text-6xl font-black leading-none ${result.isAppPlate ? 'text-red-500' : 'text-emerald-500'}`}>
+                              %{result.isAppPlate ? result.probability : (100 - result.probability)}
+                            </span>
+                            <button 
+                              onClick={() => setShowInfo(!showInfo)}
+                              className="text-slate-300 hover:text-slate-500 transition-colors p-1"
+                            >
+                              <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                          </div>
+                          <p className="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-[0.3em] font-black">Güven Oranı</p>
+                        </div>
+                      </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <DetailCard label="Font Kalınlığı" value={result.details.fontThickness} />
-                      <DetailCard label="Karakter Aralığı" value={result.details.spacing} />
-                      <DetailCard label="Çerçeve Yapısı" value={result.details.borderStyle} />
-                    </div>
-                  </div>
+                      {/* Bilgi Kutusu */}
+                      <AnimatePresence>
+                        {showInfo && (
+                          <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden mb-8"
+                          >
+                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-500 leading-relaxed">
+                              <p className="font-bold text-slate-900 mb-2 uppercase tracking-widest">Güven Oranı Nedir?</p>
+                              Bu yüzde, yapay zekanın plakanın mevcut durumuna dair ne kadar emin olduğunu gösterir. 
+                              <br /><br />
+                              Plaka <strong>APP</strong> olarak tespit edilirse, yüzde APP olma olasılığını; <strong>Standart</strong> olarak tespit edilirse, yüzde standart olma olasılığını temsil eder.
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
-                  <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <Sparkles className="w-4 h-4" />
-                      <span className="text-[10px] font-bold uppercase tracking-widest">Gemini Multimodal Motoru</span>
-                    </div>
-                    <div className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border ${result.isAppPlate ? 'border-red-500/30 text-red-500 bg-red-50' : 'border-emerald-500/30 text-emerald-500 bg-emerald-50'}`}>
-                      {result.isAppPlate ? "Yasal Risk Var" : "Yasal Standart"}
-                    </div>
-                  </div>
+                      {/* İlerleme Çubuğu */}
+                      <div className="w-full h-3 sm:h-4 bg-slate-100 rounded-full mb-10 sm:mb-12 overflow-hidden border border-slate-200/50">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${result.isAppPlate ? result.probability : (100 - result.probability)}%` }}
+                          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                          className={`h-full rounded-full ${result.isAppPlate ? 'bg-gradient-to-r from-red-600 to-red-400' : 'bg-gradient-to-r from-emerald-600 to-emerald-400'}`}
+                        />
+                      </div>
+
+                      <div className="space-y-8 flex-grow">
+                        <div>
+                          <div className="flex items-center gap-2 mb-4 text-slate-400">
+                            <Info className="w-4 h-4" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Teknik Özet</span>
+                          </div>
+                          <p className="text-xl sm:text-2xl font-light text-slate-700 leading-snug italic">
+                            "{result.reason}"
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          <DetailCard label="Font Kalınlığı" value={result.details.fontThickness} />
+                          <DetailCard label="Karakter Aralığı" value={result.details.spacing} />
+                          <DetailCard label="Çerçeve Yapısı" value={result.details.borderStyle} />
+                        </div>
+                      </div>
+
+                      <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 text-slate-300">
+                          <Sparkles className="w-4 h-4" />
+                          <span className="text-[10px] font-bold uppercase tracking-widest">Gemini Multimodal Motoru</span>
+                        </div>
+                        <div className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border ${result.isAppPlate ? 'border-red-500/30 text-red-500 bg-red-50' : 'border-emerald-500/30 text-emerald-500 bg-emerald-50'}`}>
+                          {result.isAppPlate ? "Yasal Risk Var" : "Yasal Standart"}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </motion.div>
               ) : (
                 <div className="h-full min-h-[400px] sm:min-h-[500px] flex flex-col items-center justify-center text-center border border-slate-100 rounded-[2.5rem] bg-white relative overflow-hidden group p-6 shadow-sm">
