@@ -81,5 +81,5 @@ Bu uygulama yalnızca **bilgilendirme ve rehberlik** amaçlıdır. Yapay zeka so
 
 <p align="center">
   <i>Bu proje <b>Google AI Studio</b> ortamında sevgiyle geliştirilmiştir.</i><br>
-  <sub>© 2024 APP Plaka Kontrol Sistemi</sub>
+  <sub>© 2026 APP Plaka Kontrol Sistemi</sub>
 </p>
