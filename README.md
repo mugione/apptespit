@@ -2,6 +2,12 @@
 
 Bu uygulama, Türkiye'deki araç plakalarının resmi standartlara (TŞOF ve EGM mevzuatına) uygunluğunu analiz etmek için geliştirilmiş, profesyonel bir yapay zeka aracıdır.
 
+## 🌟 Amme Hizmeti ve Projenin Amacı
+
+Bu proje, son dönemlerde artan plaka denetimleri, standart dışı font kullanımı ve buna bağlı olarak vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **bir amme hizmeti (kamu yararı)** olarak geliştirilmiştir. 
+
+Amacımız, araç sahiplerinin plakalarının yasal standartlara uygun olup olmadığını saniyeler içinde, hiçbir ücret ödemeden kontrol edebilmelerini sağlamaktır.
+
 ## 🚀 Özellikler
 
 - **Yapay Zeka Analizi:** Google Gemini Multimodal motoru kullanılarak plaka üzerindeki font, karakter aralığı ve çerçeve yapısı incelenir.
