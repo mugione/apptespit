@@ -1,69 +1,85 @@
-# APP PLAKA TESPİT - Yapay Zeka Destekli Plaka Analiz Sistemi
+# 🏎️ APP PLAKA TESPİT
+### Yapay Zeka Destekli Profesyonel Plaka Analiz Sistemi
 
-Bu uygulama, Türkiye'deki araç plakalarının resmi standartlara (TŞOF ve EGM mevzuatına) uygunluğunu analiz etmek için geliştirilmiş, profesyonel bir yapay zeka aracıdır.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+</p>
 
-## 🌟 Amme Hizmeti ve Projenin Amacı
+---
 
-Bu proje, son dönemlerde artan plaka denetimleri, standart dışı font kullanımı ve buna bağlı olarak vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **bir amme hizmeti (kamu yararı)** olarak geliştirilmiştir. 
+## 📖 Proje Hakkında
 
-Amacımız, araç sahiplerinin plakalarının yasal standartlara uygun olup olmadığını saniyeler içinde, hiçbir ücret ödemeden kontrol edebilmelerini sağlamaktır.
+Bu uygulama, Türkiye'deki araç plakalarının resmi standartlara (**TŞOF ve EGM mevzuatına**) uygunluğunu analiz etmek için geliştirilmiş, profesyonel bir yapay zeka aracıdır. 
 
-## 🚀 Özellikler
+> **🌟 Amme Hizmeti:** Bu proje, standart dışı plaka kullanımı nedeniyle vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **ücretsiz ve kamu yararına** geliştirilmiştir.
 
-- **Görsel Doğrulama:** Yüklenen görselin gerçekten bir araç plakası olup olmadığını otomatik olarak tespit eder; plaka dışı görsellerde kullanıcıyı uyarır.
-- **Kamera Desteği:** Mobil cihazlarda doğrudan kamera üzerinden plaka fotoğrafı çekme ve analiz etme özelliği.
-- **Yapay Zeka Analizi:** Google Gemini Multimodal motoru kullanılarak plaka üzerindeki font, karakter aralığı ve çerçeve yapısı incelenir.
-- **APP Tespiti:** Standart dışı (Avrupa Pres Plaka - APP) plakaları yüksek doğrulukla tespit eder.
-- **Teknik Detaylar:** Font kalınlığı, karakterlerin birbirine olan mesafesi ve plaka çerçevesi gibi teknik parametreler hakkında detaylı bilgi sunar.
-- **Modern Arayüz:** Aydınlık, ferah ve kullanıcı dostu modern bir tasarım.
-- **Resmi Mevzuat Bilgilendirmesi:** Emniyet Genel Müdürlüğü'nün güncel duyurularını ve yasal gereklilikleri içeren rehber bölümü.
-- **Mobil Uyumluluk:** Tüm cihazlarda sorunsuz çalışan duyarlı (responsive) yapı.
+---
+
+## 🚀 Öne Çıkan Özellikler
+
+| Özellik | Açıklama |
+| :--- | :--- |
+| 🔍 **Görsel Doğrulama** | Yüklenen görselin plaka olup olmadığını otomatik tespit eder. |
+| 📸 **Kamera Desteği** | Mobil cihazlarda anlık fotoğraf çekimi ve analiz. |
+| 🧠 **AI Analizi** | Google Gemini Multimodal motoru ile derinlemesine inceleme. |
+| 🚩 **APP Tespiti** | Standart dışı (Avrupa Pres Plaka) plakaları yüksek doğrulukla ayırır. |
+| 📊 **Teknik Özet** | Font, karakter aralığı ve çerçeve yapısı hakkında detaylı rapor. |
+| 📱 **Responsive** | Tüm cihazlarda (Mobil, Tablet, Masaüstü) kusursuz deneyim. |
+
+---
 
 ## 🛠️ Teknoloji Yığını
 
-- **Frontend:** React 18+, Vite
-- **Styling:** Tailwind CSS
-- **Animasyonlar:** Framer Motion (motion/react)
-- **İkonlar:** Lucide React
-- **AI Engine:** Google Gemini API (@google/genai)
+- **Çekirdek:** React 18+ & Vite
+- **Stil:** Tailwind CSS (Modern & Clean UI)
+- **Animasyon:** Framer Motion (Akıcı geçişler)
+- **İkon Seti:** Lucide React
+- **Zeka:** Google Gemini Pro Vision API
 
-## 🔑 Gemini API Kurulumu
+---
 
-Bu uygulamayı kendi ortamınızda çalıştırmak için bir Google Gemini API anahtarına ihtiyacınız vardır:
+## 🔑 Kurulum Rehberi
 
-1. [Google AI Studio](https://aistudio.google.com/) adresine gidin ve ücretsiz bir API anahtarı oluşturun.
-2. Projenin kök dizininde `.env` dosyası oluşturun (veya mevcut olanı kullanın).
-3. Aşağıdaki satırı ekleyin:
-   ```env
-   GEMINI_API_KEY=SİZİN_API_ANAHTARINIZ
-   ```
-4. Uygulama bu anahtarı kullanarak analizleri gerçekleştirecektir.
+### 1. Gemini API Anahtarı
+Uygulamanın çalışması için bir API anahtarına ihtiyacınız vardır:
+1. [Google AI Studio](https://aistudio.google.com/) üzerinden ücretsiz anahtarınızı alın.
+2. Proje kök dizinine `.env` dosyası oluşturun.
+3. `GEMINI_API_KEY=SİZİN_ANAHTARINIZ` satırını ekleyin.
 
-## 📖 Kullanım
-
-1. Uygulama ana sayfasındaki görsel yükleme alanına plaka fotoğrafını yükleyin, sürükleyin veya **kamera butonuna** tıklayarak anlık fotoğraf çekin.
-2. Yapay zeka görseli saniyeler içinde analiz eder.
-3. Sonuç ekranında plakanın **Standart** mı yoksa **APP** mi olduğu, güven oranıyla birlikte gösterilir.
-4. Teknik özet kısmından analizin nedenlerini inceleyebilirsiniz.
-
-## ⚖️ Yasal Uyarı
-
-Bu uygulama yalnızca bilgilendirme ve rehberlik amaçlıdır. Yapay zeka sonuçları her zaman %100 doğruluk garanti etmeyebilir. Resmi plaka kontrolü ve yasal işlemler için her zaman yetkili kurumlara (Emniyet Genel Müdürlüğü, Noterler, TŞOF) başvurulmalıdır.
-
-## 🛠️ Kurulum ve Geliştirme
-
-Projeyi yerel ortamınızda çalıştırmak için:
-
+### 2. Yerel Çalıştırma
 ```bash
-# Bağımlılıkları yükleyin
+# Bağımlılıkları yükle
 npm install
 
-# Geliştirme sunucusunu başlatın
+# Geliştirme modunda başlat
 npm run dev
 
-# Üretim için derleyin
+# Yayına hazır hale getir
 npm run build
 ```
 
 ---
-*Bu proje Google AI Studio ortamında geliştirilmiştir.*
+
+## 📖 Kullanım Adımları
+
+1. **Yükle:** Plaka fotoğrafını sürükleyin veya kamera butonuna basın.
+2. **Analiz:** Yapay zeka görseli saniyeler içinde işler.
+3. **Sonuç:** Plakanın yasal durumunu ve teknik detaylarını inceleyin.
+4. **Bilgi:** Mevzuat bölümünden güncel kurallara göz atın.
+
+---
+
+## ⚖️ Yasal Uyarı
+
+Bu uygulama yalnızca **bilgilendirme ve rehberlik** amaçlıdır. Yapay zeka sonuçları her zaman %100 doğruluk garanti etmeyebilir. Resmi işlemler için her zaman **Emniyet Genel Müdürlüğü**, **Noterler** veya **TŞOF** gibi yetkili kurumlara başvurulmalıdır.
+
+---
+
+<p align="center">
+  <i>Bu proje <b>Google AI Studio</b> ortamında sevgiyle geliştirilmiştir.</i><br>
+  <sub>© 2024 APP Plaka Kontrol Sistemi</sub>
+</p>
