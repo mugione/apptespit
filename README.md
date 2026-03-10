@@ -15,7 +15,7 @@
 
 Bu uygulama, Türkiye'deki araç plakalarının resmi standartlara (**TŞOF ve EGM mevzuatına**) uygunluğunu analiz etmek için geliştirilmiş, profesyonel bir yapay zeka aracıdır. 
 
-> **🌟 Amme Hizmeti:** Bu proje, standart dışı plaka kullanımı nedeniyle vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **ücretsiz ve kamu yararına** geliştirilmiştir.
+> **🌟 Opnersource:** Bu proje, standart dışı plaka kullanımı nedeniyle vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **ücretsiz ve kamu yararına** geliştirilmiştir.
 
 ---
 
