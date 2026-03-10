@@ -21,7 +21,9 @@ export default function App() {
   const [showInfo, setShowInfo] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+  const ai = new GoogleGenAI({ 
+    apiKey: (import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '') as string 
+  });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
