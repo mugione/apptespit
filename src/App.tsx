@@ -176,15 +176,15 @@ export default function App() {
                 </div>
               ) : (
                 <>
-                  <img src={image} className="w-full h-full object-contain p-4" referrerPolicy="no-referrer" />
+                  <img src={image} alt="Yüklenen plaka görseli" className="w-full h-full object-contain p-4" referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <button onClick={clear} className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 sm:p-3 rounded-2xl bg-white/90 backdrop-blur-xl border border-slate-200 hover:bg-red-500 hover:text-white transition-colors z-20 shadow-lg text-slate-400">
+                  <button onClick={clear} aria-label="Görseli temizle" className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 sm:p-3 rounded-2xl bg-white/90 backdrop-blur-xl border border-slate-200 hover:bg-red-500 hover:text-white transition-colors z-20 shadow-lg text-slate-400">
                     <X className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </>
               )}
-              <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
-              <input type="file" ref={cameraInputRef} onChange={handleImageUpload} accept="image/*" capture="environment" className="hidden" />
+              <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" aria-label="Dosya yükle" />
+              <input type="file" ref={cameraInputRef} onChange={handleImageUpload} accept="image/*" capture="environment" className="hidden" aria-label="Kamera ile fotoğraf çek" />
             </motion.div>
 
             {image && (
@@ -222,6 +222,7 @@ export default function App() {
                       </p>
                       <button 
                         onClick={clear}
+                        aria-label="Yeni görsel yüklemek için mevcut görseli değiştir"
                         className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-slate-800 transition-colors"
                       >
                         Görseli Değiştir
@@ -248,6 +249,8 @@ export default function App() {
                             </span>
                             <button 
                               onClick={() => setShowInfo(!showInfo)}
+                              aria-label="Güven oranı hakkında bilgi"
+                              aria-expanded={showInfo}
                               className="text-slate-300 hover:text-slate-500 transition-colors p-1"
                             >
                               <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
