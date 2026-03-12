@@ -20,6 +20,7 @@ export default function App() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,6 +35,7 @@ export default function App() {
       reader.onloadend = () => {
         setImage(reader.result as string);
         setResult(null);
+        setErrorMsg(null);
       };
       reader.readAsDataURL(file);
     }
@@ -43,6 +45,7 @@ export default function App() {
     if (!image) return;
     setIsAnalyzing(true);
     setResult(null);
+    setErrorMsg(null);
 
     try {
       const base64Data = image.split(',')[1];
@@ -82,9 +85,15 @@ export default function App() {
 
       const data = JSON.parse(response.text);
       setResult(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert("Analiz sırasında bir hata oluştu. Lütfen tekrar deneyin.");
+      const errorMessage = error?.message?.toLowerCase() || '';
+      
+      if (errorMessage.includes('429') || errorMessage.includes('quota') || errorMessage.includes('rate limit') || errorMessage.includes('too many requests')) {
+        setErrorMsg("API limitleri doldu. Lütfen 1-2 dakika bekleyip tekrar deneyin. Eğer günlük limite ulaşıldıysa, kotalar yarın sıfırlanacaktır.");
+      } else {
+        setErrorMsg("Analiz sırasında bir hata oluştu. Lütfen tekrar deneyin.");
+      }
     } finally {
       setIsAnalyzing(false);
     }
@@ -93,6 +102,7 @@ export default function App() {
   const clear = () => {
     setImage(null);
     setResult(null);
+    setErrorMsg(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -104,8 +114,8 @@ export default function App() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-500/5 blur-[140px] rounded-full" />
       </div>
 
-      <main className="relative z-10 container mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-24 max-w-7xl">
-        <header className="mb-12 sm:mb-16 lg:mb-24 text-center">
+      <main className="relative z-10 container mx-auto px-4 sm:px-6 py-4 sm:py-8 lg:py-12 max-w-7xl">
+        <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -114,8 +124,8 @@ export default function App() {
             <Gauge className="w-3.5 h-3.5 sm:w-4 h-4 text-orange-500" />
             <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] font-black text-slate-500">Yapay Zeka Görsel Analizi</span>
           </motion.div>
-          <h1 className="text-4xl sm:text-7xl lg:text-9xl font-black tracking-tighter mb-4 sm:mb-6 leading-none text-slate-900">
-            APP <span className="text-orange-500">KONTROL</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter mb-2 sm:mb-4 leading-none text-slate-900">
+            APP PLAKA <span className="text-orange-500">KONTROL</span>
           </h1>
           <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-lg lg:text-xl font-light px-2 sm:px-4">
             Türkiye plaka standartlarına göre font ve karakter analizi yapan profesyonel yapay zeka tespit sistemi.
@@ -125,6 +135,19 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
           {/* Sol Panel: Kontroller */}
           <div className="lg:col-span-5 flex flex-col gap-6 sm:gap-8 lg:sticky lg:top-24">
+            {errorMsg && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-start gap-3 shadow-sm"
+              >
+                <ShieldAlert className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-700 font-medium leading-relaxed">
+                  {errorMsg}
+                </p>
+              </motion.div>
+            )}
+
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}

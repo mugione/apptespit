@@ -15,7 +15,7 @@
 
 Bu uygulama, Türkiye'deki araç plakalarının resmi standartlara (**TŞOF ve EGM mevzuatına**) uygunluğunu analiz etmek için geliştirilmiş, profesyonel bir yapay zeka aracıdır. 
 
-> **🌟 Opnersource:** Bu proje, standart dışı plaka kullanımı nedeniyle vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **ücretsiz ve kamu yararına** geliştirilmiştir.
+> **🌟 Amme Hizmeti:** Bu proje, standart dışı plaka kullanımı nedeniyle vatandaşlarımızın yaşadığı mağduriyetleri (cezalar, muayene tekrarları vb.) azaltmak amacıyla tamamen **ücretsiz ve kamu yararına** geliştirilmiştir.
 
 ---
 
@@ -81,5 +81,5 @@ Bu uygulama yalnızca **bilgilendirme ve rehberlik** amaçlıdır. Yapay zeka so
 
 <p align="center">
   <i>Bu proje <b>Google AI Studio</b> ortamında sevgiyle geliştirilmiştir.</i><br>
-  <sub>© 2026 APP Plaka Kontrol Sistemi</sub>
+  <sub>© 2024 APP Plaka Kontrol Sistemi</sub>
 </p>
